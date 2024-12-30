@@ -12,7 +12,7 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-group = "net.slqmy"
+group = "dev.enderman"
 version = "1.0-SNAPSHOT"
 description = "A plugin to improve Minecraft's combat system."
 
