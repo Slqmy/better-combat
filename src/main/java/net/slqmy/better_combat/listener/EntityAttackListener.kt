@@ -1,52 +1,77 @@
-package net.slqmy.better_combat.listener;
+package net.slqmy.better_combat.listener
 
-import net.slqmy.better_combat.BetterCombatPlugin;
-import net.slqmy.better_combat.manager.CombatManager;
-import net.slqmy.better_combat.type.CombatInstance;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.jetbrains.annotations.NotNull;
+import net.slqmy.better_combat.BetterCombatPlugin
+import net.slqmy.better_combat.type.CombatInstance
+import org.bukkit.Bukkit
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import kotlin.math.min
 
-public class EntityAttackListener implements Listener {
-    private final BetterCombatPlugin plugin;
-
-    public EntityAttackListener(BetterCombatPlugin plugin) {
-        this.plugin = plugin;
-    }
-
+class EntityAttackListener(
+    private val plugin: BetterCombatPlugin
+) : Listener {
     @EventHandler
-    public void onEntityAttack(@NotNull EntityDamageByEntityEvent event) {
-        Entity attacker = event.getDamager();
-        Entity attacked = event.getEntity();
+    fun onEntityAttack(
+        event: EntityDamageByEntityEvent
+    ) {
+        val attacker =
+            event.damager
+        val attacked =
+            event.entity
 
-        double damage = event.getFinalDamage();
+        var damage =
+            event.finalDamage
 
-        Bukkit.getLogger().info("Original damage: " + damage);
+        Bukkit.getLogger()
+            .info(
+                "Original damage: $damage"
+            )
 
-        if (attacked instanceof LivingEntity livingEntity) {
-            double remainingHealth = livingEntity.getHealth();
+        if (attacked is LivingEntity) {
+            val remainingHealth =
+                attacked.health
 
-            damage = Math.min(damage, remainingHealth); // Can't deal more damage than there is health remaining.
+            damage =
+                min(
+                    damage,
+                    remainingHealth
+                ) // Can't deal more damage than there is health remaining.
 
-            Bukkit.getLogger().info("New damage: " + damage);
+            Bukkit.getLogger()
+                .info(
+                    "New damage: $damage"
+                )
         }
 
-        Bukkit.getLogger().info(attacker + " attacked " + attacked + " & dealt " + damage + " damage");
+        Bukkit.getLogger()
+            .info(
+                "$attacker attacked $attacked & dealt $damage damage"
+            )
 
-        CombatManager combatManager = plugin.getCombatManager();
+        val combatManager =
+            plugin.combatManager
 
-        CombatInstance combatInstance = combatManager.getCombatInstance(attacked);
+        var combatInstance =
+            combatManager!!.getCombatInstance(
+                attacked
+            )
 
         if (combatInstance == null) {
-            combatInstance = new CombatInstance(attacked);
+            combatInstance =
+                CombatInstance(
+                    attacked
+                )
 
-            combatManager.addCombatInstance(combatInstance);
+            combatManager.addCombatInstance(
+                combatInstance
+            )
         }
 
-        combatInstance.addEntityDamageContribution(attacker, damage);
+        combatInstance.addEntityDamageContribution(
+            attacker,
+            damage
+        )
     }
 }

@@ -1,55 +1,62 @@
-package net.slqmy.better_combat.listener;
+package net.slqmy.better_combat.listener
 
-import net.slqmy.better_combat.BetterCombatPlugin;
-import net.slqmy.better_combat.manager.CombatManager;
-import net.slqmy.better_combat.type.CombatInstance;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.jetbrains.annotations.NotNull;
+import net.slqmy.better_combat.BetterCombatPlugin
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 
-public class EntityDeathListener implements Listener {
-
-    private final BetterCombatPlugin plugin;
-
-    public EntityDeathListener(BetterCombatPlugin plugin) {
-        this.plugin = plugin;
-    }
-
+class EntityDeathListener(
+    private val plugin: BetterCombatPlugin
+) : Listener {
     @EventHandler
-    public void onEntityDeath(@NotNull EntityDeathEvent event) {
-        CombatManager combatManager = plugin.getCombatManager();
+    fun onEntityDeath(
+        event: EntityDeathEvent
+    ) {
+        val combatManager =
+            plugin.combatManager
 
-        LivingEntity deadEntity = event.getEntity();
+        val deadEntity =
+            event.entity
 
-        CombatInstance combatInstance = combatManager.getCombatInstance(deadEntity);
+        val combatInstance =
+            combatManager!!.getCombatInstance(
+                deadEntity
+            ) ?: return
 
-        if (combatInstance == null) {
-            return;
-        }
+        val highestDamageContributor =
+            combatInstance.highestDamageContributor
 
-        Entity highestDamageContributor = combatInstance.getHighestDamageContributor();
+        Bukkit.getLogger()
+            .info(
+                "$highestDamageContributor contributed most to the death of $deadEntity"
+            )
+        Bukkit.getLogger()
+            .info(
+                "combatInstance.damageContributorDamageMap = " + combatInstance.damageContributorDamageMap
+            )
+        Bukkit.getLogger()
+            .info(
+                "combatInstance.damageContributorDamageMap.entrySet = " + combatInstance.damageContributorDamageMap.entries
+            )
 
-        Bukkit.getLogger().info(highestDamageContributor + " contributed most to the death of " + deadEntity);
-        Bukkit.getLogger().info("combatInstance.damageContributorDamageMap = " + combatInstance.getDamageContributorDamageMap());
-        Bukkit.getLogger().info("combatInstance.damageContributorDamageMap.entrySet = " + combatInstance.getDamageContributorDamageMap().entrySet());
+        val entityDamageEvent =
+            deadEntity.lastDamageCause
 
-        EntityDamageEvent entityDamageEvent = deadEntity.getLastDamageCause();
+        if (entityDamageEvent is EntityDamageByEntityEvent) {
+            val damager =
+                entityDamageEvent.damager
 
-        if (entityDamageEvent instanceof EntityDamageByEntityEvent entityDamageByEntityEvent) {
-            Entity damager = entityDamageByEntityEvent.getDamager();
-
-            if (damager instanceof Player player) {
-                deadEntity.setKiller(player);
+            if (damager is Player) {
+                deadEntity.killer =
+                    damager
             }
         }
 
-        combatManager.removeCombatInstance(combatInstance);
+        combatManager.removeCombatInstance(
+            combatInstance
+        )
     }
 }

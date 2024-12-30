@@ -3,6 +3,9 @@ plugins {
     application
 
     id("io.papermc.paperweight.userdev") version "1.5.5"
+    kotlin(
+        "jvm"
+    )
 }
 
 java {
@@ -27,6 +30,11 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+    implementation(
+        kotlin(
+            "stdlib-jdk8"
+        )
+    )
 }
 
 tasks {

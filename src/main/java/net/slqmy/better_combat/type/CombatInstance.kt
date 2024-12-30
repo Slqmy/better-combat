@@ -1,56 +1,54 @@
-package net.slqmy.better_combat.type;
+package net.slqmy.better_combat.type
 
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Entity
 
-import java.util.HashMap;
-import java.util.Map;
+class CombatInstance(
+    val attackedEntity: Entity
+) {
+    private val damageContributorDamageMap: MutableMap<Entity, Double> =
+        HashMap()
 
-public class CombatInstance {
-
-    private final Entity attackedEntity;
-
-    private final Map<Entity, Double> damageContributorDamageMap = new HashMap<>();
-
-    public Entity getAttackedEntity() {
-        return attackedEntity;
+    fun getDamageContributorDamageMap(): Map<Entity, Double> {
+        return damageContributorDamageMap
     }
 
-    public Map<Entity, Double> getDamageContributorDamageMap() {
-        return damageContributorDamageMap;
+    fun getEntityDamageContribution(
+        damager: Entity
+    ): Double? {
+        return damageContributorDamageMap[damager]
     }
 
-    public CombatInstance(Entity attackedEntity) {
-        this.attackedEntity = attackedEntity;
+    fun addEntityDamageContribution(
+        damagerEntity: Entity,
+        damageAmount: Double
+    ) {
+        val currentDamage =
+            damageContributorDamageMap[damagerEntity]
+
+        damageContributorDamageMap[damagerEntity] =
+            if (currentDamage == null) damageAmount else currentDamage + damageAmount
     }
 
-    public Double getEntityDamageContribution(Entity damager) {
-        return damageContributorDamageMap.get(damager);
-    }
+    val highestDamageContributor: Entity?
+        get() {
+            var highestDamageContributor: Entity? =
+                null
+            var highestContributedDamage =
+                0.0
 
-    public void addEntityDamageContribution(Entity damagerEntity, Double damageAmount) {
-        Double currentDamage = damageContributorDamageMap.get(damagerEntity);
-
-        damageContributorDamageMap.put(damagerEntity, currentDamage == null ? damageAmount : currentDamage + damageAmount);
-    }
-
-    public Entity getHighestDamageContributor() {
-        Entity highestDamageContributor = null;
-        double highestContributedDamage = 0;
-
-        for (Map.Entry<Entity, Double> damageContributionEntry : damageContributorDamageMap.entrySet()) {
-            double contributedDamage = damageContributionEntry.getValue();
-
-            if (contributedDamage > highestContributedDamage) {
-                highestDamageContributor = damageContributionEntry.getKey();
-                highestContributedDamage = contributedDamage;
+            for ((key, contributedDamage) in damageContributorDamageMap) {
+                if (contributedDamage > highestContributedDamage) {
+                    highestDamageContributor =
+                        key
+                    highestContributedDamage =
+                        contributedDamage
+                }
             }
+
+            return highestDamageContributor
         }
 
-        return highestDamageContributor;
-    }
-
-    @Override
-    public String toString() {
-        return "CombatInstance{attackedEntity=" + attackedEntity + "}";
+    override fun toString(): String {
+        return "CombatInstance{attackedEntity=$attackedEntity}"
     }
 }

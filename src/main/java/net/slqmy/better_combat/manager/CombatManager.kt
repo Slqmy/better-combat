@@ -1,30 +1,37 @@
-package net.slqmy.better_combat.manager;
+package net.slqmy.better_combat.manager
 
-import net.slqmy.better_combat.type.CombatInstance;
-import org.bukkit.entity.Entity;
+import net.slqmy.better_combat.type.CombatInstance
+import org.bukkit.entity.Entity
 
-import java.util.ArrayList;
-import java.util.List;
+class CombatManager {
+    private val combatInstances: MutableList<CombatInstance> =
+        ArrayList()
 
-public class CombatManager {
-
-    private final List<CombatInstance> combatInstances = new ArrayList<>();
-
-    public CombatInstance getCombatInstance(Entity attackedEntity) {
-        for (CombatInstance combatInstance : combatInstances) {
-            if (combatInstance.getAttackedEntity().equals(attackedEntity)) {
-                return combatInstance;
+    fun getCombatInstance(
+        attackedEntity: Entity
+    ): CombatInstance? {
+        for (combatInstance in combatInstances) {
+            if (combatInstance.attackedEntity == attackedEntity) {
+                return combatInstance
             }
         }
 
-        return null;
+        return null
     }
 
-    public void addCombatInstance(CombatInstance combatInstance) {
-        combatInstances.add(combatInstance);
+    fun addCombatInstance(
+        combatInstance: CombatInstance
+    ) {
+        combatInstances.add(
+            combatInstance
+        )
     }
 
-    public void removeCombatInstance(CombatInstance combatInstance) {
-        combatInstances.remove(combatInstance);
+    fun removeCombatInstance(
+        combatInstance: CombatInstance
+    ) {
+        combatInstances.remove(
+            combatInstance
+        )
     }
 }
