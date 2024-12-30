@@ -7,3 +7,7 @@ build
 gradle
 
 bin
+
+# Run-server files
+run/*
+!run/eula.txt
