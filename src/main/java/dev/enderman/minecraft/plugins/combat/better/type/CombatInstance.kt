@@ -1,4 +1,4 @@
-package net.slqmy.better_combat.type
+package dev.enderman.minecraft.plugins.combat.better.type
 
 import org.bukkit.entity.Entity
 

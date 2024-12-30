@@ -12,4 +12,4 @@ pluginManagement {
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = "better-combat"
+rootProject.name = "better-combat-plugin"

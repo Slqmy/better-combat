@@ -1,8 +1,8 @@
-package net.slqmy.better_combat
+package dev.enderman.minecraft.plugins.combat.better
 
-import net.slqmy.better_combat.listener.EntityAttackListener
-import net.slqmy.better_combat.listener.EntityDeathListener
-import net.slqmy.better_combat.manager.CombatManager
+import dev.enderman.minecraft.plugins.combat.better.listener.EntityAttackListener
+import dev.enderman.minecraft.plugins.combat.better.listener.EntityDeathListener
+import dev.enderman.minecraft.plugins.combat.better.manager.CombatManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 

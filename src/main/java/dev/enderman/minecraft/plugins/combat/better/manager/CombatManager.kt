@@ -1,6 +1,6 @@
-package net.slqmy.better_combat.manager
+package dev.enderman.minecraft.plugins.combat.better.manager
 
-import net.slqmy.better_combat.type.CombatInstance
+import dev.enderman.minecraft.plugins.combat.better.type.CombatInstance
 import org.bukkit.entity.Entity
 
 class CombatManager {

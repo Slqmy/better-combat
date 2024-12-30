@@ -1,7 +1,7 @@
-package net.slqmy.better_combat.listener
+package dev.enderman.minecraft.plugins.combat.better.listener
 
-import net.slqmy.better_combat.BetterCombatPlugin
-import net.slqmy.better_combat.type.CombatInstance
+import dev.enderman.minecraft.plugins.combat.better.BetterCombatPlugin
+import dev.enderman.minecraft.plugins.combat.better.type.CombatInstance
 import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
