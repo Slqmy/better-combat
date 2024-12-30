@@ -3,6 +3,7 @@ plugins {
     application
 
     id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
     kotlin(
         "jvm"
     )
@@ -53,7 +54,7 @@ tasks {
         val props = mapOf(
                 "name" to project.name,
                 "version" to project.version,
-                "description" to project.description,
+                "description" to (project.description ?: "No description provided"),
                 "apiVersion" to "1.20"
         )
 
@@ -74,5 +75,5 @@ tasks {
 }
 
 application {
-    mainClass.set("BetterCombatPlugin")
+    mainClass.set("dev.enderman.minecraft.plugins.combat.better.BetterCombatPlugin")
 }
