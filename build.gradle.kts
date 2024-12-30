@@ -1,79 +1,88 @@
+import xyz.jpenilla.resourcefactory.bukkit.BukkitPluginYaml
+
 plugins {
     java
-    application
+    `java-library`
 
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    `maven-publish`
+
+    id("io.papermc.paperweight.userdev") version "1.7.3"
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.2.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
-    kotlin(
-        "jvm"
-    )
+    id("io.github.goooler.shadow") version "8.1.8"
+    kotlin("jvm")
 }
+
+description = "A plugin that changes the way kill credit is given."
+
+group = "enderman.dev"
+version = "0.0.1"
+
+val projectGroupString = group.toString()
+val projectVersionString = version.toString()
+
+val javaVersion = 21
+val javaVersionEnumMember = JavaVersion.valueOf("VERSION_$javaVersion")
+
+val paperApiMinecraftVersion = "1.21.1"
+val paperApiVersion = "$paperApiMinecraftVersion-R0.1-SNAPSHOT"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
+    sourceCompatibility = javaVersionEnumMember
+    targetCompatibility = javaVersionEnumMember
 
-group = "dev.enderman"
-version = "1.0-SNAPSHOT"
-description = "A plugin to improve Minecraft's combat system."
+    toolchain.languageVersion.set(JavaLanguageVersion.of(javaVersion))
+}
 
 repositories {
     mavenCentral()
-
-    mavenLocal()
-
-    maven("https://repo.papermc.io/repository/maven-public/")
-
-    maven("https://oss.sonatype.org/content/groups/public/")
-
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
-    implementation(
-        kotlin(
-            "stdlib-jdk8"
-        )
-    )
+    paperweight.paperDevBundle(paperApiVersion)
+
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+
     compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(javaVersion)
     }
 
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
+}
 
-    processResources {
-        filteringCharset = Charsets.UTF_8.name()
+bukkitPluginYaml {
+    name = "BetterCombat"
+    description = project.description
 
-        val props = mapOf(
-                "name" to project.name,
-                "version" to project.version,
-                "description" to (project.description ?: "No description provided"),
-                "apiVersion" to "1.20"
-        )
+    authors = listOfNotNull("Esoteric Enderman")
 
-        inputs.properties(props)
+    setVersion(project.version)
 
-        filesMatching("plugin.yml") {
-            expand(props)
+    apiVersion = paperApiMinecraftVersion
+    main = "${project.group}.minecraft.plugins.combat.better.BetterCombatPlugin"
+
+    load = BukkitPluginYaml.PluginLoadOrder.STARTUP
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            groupId = projectGroupString
+            artifactId = rootProject.name
+            version = projectVersionString
         }
-    }
-
-    build {
-        dependsOn(reobfJar)
-    }
-
-    assemble {
-        dependsOn(reobfJar)
     }
 }
 
-application {
-    mainClass.set("dev.enderman.minecraft.plugins.combat.better.BetterCombatPlugin")
+tasks.named("publishMavenJavaPublicationToMavenLocal") {
+    dependsOn(tasks.named("build"))
 }
