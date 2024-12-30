@@ -5,12 +5,7 @@ import org.bukkit.entity.Entity
 class CombatInstance(
     val attackedEntity: Entity
 ) {
-    val damageContributorDamageMap: MutableMap<Entity, Double> =
-        HashMap()
-
-    fun getDamageContributorDamageMap(): Map<Entity, Double> {
-        return damageContributorDamageMap
-    }
+    val damageContributorDamageMap: MutableMap<Entity, Double> = HashMap()
 
     fun getEntityDamageContribution(
         damager: Entity
