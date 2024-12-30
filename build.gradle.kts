@@ -15,7 +15,7 @@ plugins {
 
 description = "A plugin that changes the way kill credit is given."
 
-group = "enderman.dev"
+group = "dev.enderman"
 version = "0.0.1"
 
 val projectGroupString = group.toString()
